@@ -1,0 +1,996 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CV — Christin Negoue</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0b0b0f;
+            --surface: #131318;
+            --surface-2: #1a1a22;
+            --border: #2a2a35;
+            --text: #e8e8ed;
+            --text-dim: #8888a0;
+            --text-muted: #55556a;
+            --accent: #6c5ce7;
+            --accent-2: #a29bfe;
+            --hot: #fd79a8;
+            --cyan: #00cec9;
+            --gold: #ffeaa7;
+            --white: #ffffff;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+        }
+
+        /* ── NOISE TEXTURE ── */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .cv {
+            max-width: 1100px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ── HERO ── */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 80px 64px;
+            position: relative;
+        }
+
+        .hero-orb {
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            border-radius: 50%;
+            filter: blur(120px);
+            opacity: 0.12;
+            pointer-events: none;
+        }
+
+        .hero-orb--1 {
+            top: 10%;
+            right: -10%;
+            background: var(--accent);
+        }
+
+        .hero-orb--2 {
+            bottom: 5%;
+            left: -15%;
+            background: var(--hot);
+        }
+
+        .hero-top {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 48px;
+        }
+
+        .hero-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--cyan);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(0,206,201,0.4); }
+            50% { opacity: 0.7; box-shadow: 0 0 0 8px rgba(0,206,201,0); }
+        }
+
+        .hero-status {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.72rem;
+            color: var(--cyan);
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .hero-name {
+            font-family: 'Syne', sans-serif;
+            font-size: clamp(2rem, 10vw, 4.5rem);
+            font-weight: 800;
+            line-height: 0.92;
+            letter-spacing: -0.04em;
+            color: var(--white);
+            margin-bottom: 24px;
+        }
+
+        .hero-name span {
+            display: block;
+            background: linear-gradient(135deg, var(--accent-2) 0%, var(--hot) 50%, var(--gold) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-title {
+            font-size: 1.15rem;
+            font-weight: 400;
+            color: var(--text-dim);
+            letter-spacing: 0.01em;
+            margin-bottom: 40px;
+        }
+
+        .hero-taglines {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-bottom: 48px;
+            padding-left: 24px;
+            border-left: 2px solid var(--accent);
+        }
+
+        .hero-tagline {
+            font-family: 'Syne', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--accent-2);
+            letter-spacing: 0.02em;
+        }
+
+        .hero-bio {
+            max-width: 940px;
+            font-size: 20px;
+            line-height: 1.85;
+            color: var(--text-dim);
+            font-weight: 300;
+        }
+
+        .hero-meta {
+            display: flex;
+            gap: 32px;
+            margin-top: 48px;
+            padding-top: 32px;
+            border-top: 1px solid var(--border);
+        }
+
+        .hero-meta-item {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.90rem;
+            color: var(--text-muted);
+            letter-spacing: 0.02em;
+        }
+
+        .hero-meta-item strong {
+            color: var(--text-dim);
+            font-weight: 500;
+        }
+
+        /* ── SECTION DIVIDER ── */
+        .divider {
+            padding: 0 64px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .divider-line {
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(90deg, var(--border), transparent);
+        }
+
+        .divider-line--right {
+            background: linear-gradient(90deg, transparent, var(--border));
+        }
+
+        .divider-num {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            letter-spacing: 0.1em;
+        }
+
+        /* ── SECTIONS ── */
+        .section {
+            padding: 80px 64px;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: baseline;
+            gap: 20px;
+            margin-bottom: 56px;
+        }
+
+        .section-number {
+            font-family: 'Syne', sans-serif;
+            font-size: 7rem;
+            font-weight: 800;
+            line-height: 1;
+            background: linear-gradient(180deg, var(--border) 0%, transparent 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .section-title {
+            font-family: 'Syne', sans-serif;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--white);
+            letter-spacing: -0.02em;
+        }
+
+        /* ── PROJECT ── */
+        .project-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 48px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .project-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--accent), var(--hot), transparent);
+        }
+
+        .project-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+        .project-name {
+            font-family: 'Syne', sans-serif;
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--white);
+            letter-spacing: -0.02em;
+        }
+
+        .project-badge {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.6rem;
+            font-weight: 500;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--cyan);
+            background: rgba(0,206,201,0.08);
+            border: 1px solid rgba(0,206,201,0.15);
+            padding: 6px 14px;
+            border-radius: 100px;
+        }
+
+        .project-sub {
+            font-size: 1rem;
+            color: var(--text-dim);
+            margin-bottom: 36px;
+        }
+
+        .ps-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 48px;
+        }
+
+        .ps-box {
+            padding: 28px;
+            border-radius: 14px;
+            background: var(--surface-2);
+            border: 1px solid var(--border);
+        }
+
+        .ps-box--sol {
+            border-color: rgba(108,92,231,0.25);
+            background: rgba(108,92,231,0.04);
+        }
+
+        .ps-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+        }
+
+        .ps-box--sol .ps-label {
+            color: var(--accent-2);
+        }
+
+        .ps-box p {
+            font-size: 1rem;
+            color: var(--text-dim);
+            line-height: 1.7;
+        }
+
+        .tech-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+        }
+
+        .tech-col-header {
+            display: flex;
+            align-items: baseline;
+            gap: 12px;
+            margin-bottom: 20px;
+            padding-bottom: 14px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .tech-col-title {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--white);
+        }
+
+        .tech-col-sub {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.90rem;
+            color: var(--text-muted);
+        }
+
+        .tech-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .tech-list li {
+            font-size: 1rem;
+            color: var(--text-dim);
+            padding-left: 22px;
+            position: relative;
+            line-height: 1.6;
+            font-weight: 300;
+        }
+
+        .tech-list li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 9px;
+            width: 8px;
+            height: 1px;
+            background: var(--accent);
+        }
+
+        /* ── PASSIONS ── */
+        .passions-list {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .passion-card {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            padding: 24px 28px;
+            border-radius: 14px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: default;
+        }
+
+        .passion-card:hover {
+            border-color: var(--accent);
+            background: rgba(108,92,231,0.04);
+            transform: translateY(-2px);
+        }
+
+        .passion-num {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--accent), var(--hot));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            min-width: 44px;
+        }
+
+        .passion-text {
+            font-size: 1.1rem;
+            color: var(--text-dim);
+            line-height: 1.5;
+            font-weight: 400;
+        }
+
+        /* ── STACK ── */
+        .stack-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+        }
+
+        .stack-pill {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.82rem;
+            font-weight: 400;
+            padding: 14px 28px;
+            border-radius: 100px;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--text-dim);
+            transition: all 0.3s ease;
+            cursor: default;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stack-pill::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 100px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .stack-pill:hover {
+            border-color: var(--accent);
+            color: var(--white);
+            transform: translateY(-2px);
+        }
+
+        .stack-pill--core {
+            border-color: var(--accent);
+            color: var(--accent-2);
+            background: rgba(108,92,231,0.06);
+        }
+
+        .stack-pill--core:hover {
+            background: rgba(108,92,231,0.12);
+            color: var(--white);
+        }
+
+        .stack-pill--learning {
+            border-style: dashed;
+            border-color: var(--text-muted);
+        }
+
+        .stack-pill--learning::after {
+            content: ' ~';
+            color: var(--text-muted);
+            font-size: 0.7rem;
+        }
+
+        /* ── EXPERIENCE ── */
+        .exp-card {
+            display: grid;
+            grid-template-columns: 240px 1fr;
+            gap: 40px;
+            padding: 40px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+        }
+
+        .exp-left {
+            border-right: 1px solid var(--border);
+            padding-right: 40px;
+        }
+
+        .exp-company {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--white);
+            margin-bottom: 6px;
+        }
+
+        .exp-role {
+            font-size: 0.90rem;
+            color: var(--text-muted);
+            font-style: italic;
+        }
+
+        .exp-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            padding-top: 4px;
+        }
+
+        .exp-list li {
+            font-size: 1.1rem;
+            color: var(--text-dim);
+            padding-left: 22px;
+            position: relative;
+            line-height: 1.6;
+            font-weight: 300;
+        }
+
+        .exp-list li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 9px;
+            width: 8px;
+            height: 1px;
+            background: var(--hot);
+        }
+
+        /* ── OBJECTIVE ── */
+        .objective-section {
+            padding: 80px 64px 100px;
+        }
+
+        .objective-card {
+            position: relative;
+            padding: 56px;
+            border-radius: 24px;
+            overflow: hidden;
+            background: linear-gradient(135deg, rgba(108,92,231,0.12), rgba(253,121,168,0.08));
+            border: 1px solid rgba(108,92,231,0.2);
+        }
+
+        .objective-card::before {
+            content: '';
+            position: absolute;
+            top: -100px;
+            right: -100px;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            background: var(--accent);
+            filter: blur(100px);
+            opacity: 0.08;
+        }
+
+        .objective-card::after {
+            content: '';
+            position: absolute;
+            bottom: -80px;
+            left: -50px;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: var(--hot);
+            filter: blur(80px);
+            opacity: 0.06;
+        }
+
+        .objective-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.90rem;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--accent-2);
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .objective-target-name {
+            font-family: 'Syne', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--white);
+            letter-spacing: -0.03em;
+            margin-bottom: 6px;
+            position: relative;
+        }
+
+        .objective-headline {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 600;
+            background: linear-gradient(90deg, var(--accent-2), var(--hot));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .objective-text {
+            font-size: 0.95rem;
+            color: var(--text-dim);
+            line-height: 1.9;
+            max-width: 560px;
+            font-weight: 300;
+            position: relative;
+        }
+
+        .objective-link {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 32px;
+            position: relative;
+        }
+
+        .objective-link a {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.78rem;
+            letter-spacing: 0.06em;
+            color: var(--accent-2);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 24px;
+            border: 1px solid rgba(162,155,254,0.2);
+            border-radius: 100px;
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            background: rgba(108,92,231,0.04);
+        }
+
+        .objective-link a:hover {
+            border-color: var(--accent-2);
+            background: rgba(108,92,231,0.1);
+            color: var(--white);
+            transform: translateX(4px);
+        }
+
+        .objective-link a::after {
+            content: '\2192';
+            font-size: 1rem;
+            transition: transform 0.3s;
+        }
+
+        .objective-link a:hover::after {
+            transform: translateX(4px);
+        }
+
+        /* ── FOOTER ── */
+        .footer {
+            padding: 40px 64px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .footer-left {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.68rem;
+            color: var(--text-muted);
+            letter-spacing: 0.06em;
+        }
+
+        .footer-right {
+            display: flex;
+            gap: 4px;
+        }
+
+        .footer-bar {
+            width: 20px;
+            height: 3px;
+            border-radius: 2px;
+            background: var(--border);
+        }
+
+        .footer-bar:nth-child(1) { background: var(--accent); width: 32px; }
+        .footer-bar:nth-child(2) { background: var(--hot); width: 20px; }
+        .footer-bar:nth-child(3) { background: var(--cyan); width: 12px; }
+
+        /* ── SCROLL INDICATOR ── */
+        .scroll-hint {
+            position: absolute;
+            bottom: 40px;
+            left: 64px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            animation: bob 2s ease-in-out infinite;
+        }
+
+        @keyframes bob {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(6px); }
+        }
+
+        .scroll-arrow {
+            width: 1px;
+            height: 32px;
+            background: linear-gradient(180deg, var(--text-muted), transparent);
+        }
+
+        .scroll-text {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.6rem;
+            color: var(--text-muted);
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            writing-mode: vertical-rl;
+        }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 768px) {
+            .hero, .section, .objective-section, .footer { padding-left: 28px; padding-right: 28px; }
+            .hero-name { font-size: 3.2rem; }
+            .ps-grid, .tech-grid, .passions-list { grid-template-columns: 1fr; }
+            .exp-card { grid-template-columns: 1fr; }
+            .exp-left { border-right: none; border-bottom: 1px solid var(--border); padding-right: 0; padding-bottom: 24px; }
+            .project-card, .objective-card { padding: 32px; }
+            .section-number { font-size: 2.5rem; }
+            .objective-target-name { font-size: 1.8rem; }
+        }
+
+        /* ── PRINT ── */
+        @media print {
+            body { background: white; color: #1a1a1a; }
+            body::before { display: none; }
+            .hero-orb { display: none; }
+            .hero { min-height: auto; padding: 40px 40px; }
+            .section, .objective-section { padding: 32px 40px; }
+            .hero-name, .hero-name span { color: #0a0a0a; -webkit-text-fill-color: #0a0a0a; }
+            .scroll-hint { display: none; }
+            .project-card, .exp-card, .passion-card, .stack-pill {
+                border-color: #ddd;
+                background: #fafafa;
+            }
+            .objective-card { background: #f0f0f5; }
+            .section-title, .project-name, .exp-company, .objective-target-name { color: #0a0a0a; }
+            .ps-label, .tech-col-sub, .divider-num, .hero-status, .objective-label { color: #666; }
+            .passion-num { -webkit-text-fill-color: #4f46e5; }
+            .objective-headline { -webkit-text-fill-color: #4f46e5; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="cv">
+
+    <!-- ═══════ HERO ═══════ -->
+    <header class="hero">
+        <div class="hero-orb hero-orb--1"></div>
+        <div class="hero-orb hero-orb--2"></div>
+
+        <div class="hero-top">
+            <div class="hero-dot"></div>
+            <span class="hero-status">Disponible pour stage d'été 2025</span>
+        </div>
+
+        <h1 class="hero-name">
+            Noel Christian
+            <span>Fogang Negou</span>
+        </h1>
+
+        <p class="hero-title">Développeur Full-Stack orienté produit</p>
+
+        <div class="hero-taglines">
+            <span class="hero-tagline">Je ne code pas des fonctionnalités.</span>
+            <span class="hero-tagline">Je construis des expériences.</span>
+        </div>
+
+        <p class="hero-bio">
+            Étudiant en 3<sup>e</sup> année en informatique et développeur full stack.
+            Je conçois des plateformes complètes — du backend à l'expérience mobile —
+            avec une attention particulière à la structure, la performance et l'impact utilisateur.
+            <br><br>
+            Je m'intéresse aux environnements où la technologie sert une idée forte.
+        </p>
+
+        <div class="hero-meta">
+            <div class="hero-meta-item"><strong>Téléphone</strong> &nbsp;819-996-7000</div>
+            <div class="hero-meta-item"><strong>Email</strong> &nbsp;christiannegou@yahoo.com</div>
+            <div class="hero-meta-item"><strong>GitHub</strong> &nbsp; <a href="https://github.com/ChristinNegou" target="_blank">github.com/ChristinNegou</a></div>
+            <div class="hero-meta-item"><strong>LinkedIn</strong> &nbsp; <a href="https://www.linkedin.com/in/noel-christian-negou-397005394" target="_blank">linkedin.com/in/noel-christian-negou</a></div>
+        </div>
+
+        <div class="scroll-hint">
+            <div class="scroll-arrow"></div>
+            <span class="scroll-text">scroll</span>
+        </div>
+    </header>
+
+    <!-- ═══════ DIVIDER ═══════ -->
+    <div class="divider">
+        <div class="divider-line divider-line--right"></div>
+        <span class="divider-num">01</span>
+        <div class="divider-line"></div>
+    </div>
+
+    <!-- ═══════ PROJET PHARE ═══════ -->
+    <section class="section">
+        <div class="section-header">
+            <span class="section-number">01</span>
+            <h2 class="section-title">Projet phare</h2>
+        </div>
+
+        <div class="project-card">
+            <div class="project-top">
+                <h3 class="project-name">Deneige Auto</h3>
+                <span class="project-badge">Full-Stack Mobile</span>
+            </div>
+            <p class="project-sub">Plateforme mobile connectant clients et déneigeurs en temps réel.</p>
+
+            <div class="ps-grid">
+                <div class="ps-box">
+                    <div class="ps-label">Problème</div>
+                    <p>Les étudiants et propriétaires perdent du temps à chercher un service de déneigement fiable.</p>
+                </div>
+                <div class="ps-box ps-box--sol">
+                    <div class="ps-label">Solution</div>
+                    <p>Une plateforme mobile complète avec paiement intégré et communication temps réel.</p>
+                </div>
+            </div>
+
+            <div class="tech-grid">
+                <div>
+                    <div class="tech-col-header">
+                        <span class="tech-col-title">Backend</span>
+                        <span class="tech-col-sub">Node.js / Express / MongoDB</span>
+                    </div>
+                    <ul class="tech-list">
+                        <li>API REST sécurisée avec authentification JWT</li>
+                        <li>Hash des mots de passe (bcrypt)</li>
+                        <li>Paiements intégrés avec Stripe</li>
+                        <li>WebSockets (Socket.IO) — temps réel</li>
+                        <li>Upload d'images (Multer + Cloudinary)</li>
+                        <li>Sécurisation API (Helmet, Rate limiting)</li>
+                        <li>Tests automatisés (Jest, Supertest)</li>
+                        <li>Déploiement cloud (Railway + Docker)</li>
+                    </ul>
+                </div>
+                <div>
+                    <div class="tech-col-header">
+                        <span class="tech-col-title">Frontend Mobile</span>
+                        <span class="tech-col-sub">Flutter</span>
+                    </div>
+                    <ul class="tech-list">
+                        <li>Clean Architecture (domain / data / presentation)</li>
+                        <li>State management Bloc</li>
+                        <li>Intégration Google Maps + géolocalisation</li>
+                        <li>Notifications push (Firebase)</li>
+                        <li>Gestion sécurisée des tokens</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════ DIVIDER ═══════ -->
+    <div class="divider">
+        <div class="divider-line divider-line--right"></div>
+        <span class="divider-num">02</span>
+        <div class="divider-line"></div>
+    </div>
+
+    <!-- ═══════ CE QUE J'AIME ═══════ -->
+    <section class="section">
+        <div class="section-header">
+            <span class="section-number">02</span>
+            <h2 class="section-title">Ce que j'aime faire</h2>
+        </div>
+
+        <div class="passions-list">
+            <div class="passion-card">
+                <span class="passion-num">01</span>
+                <span class="passion-text">Transformer une idée en produit fonctionnel</span>
+            </div>
+            <div class="passion-card">
+                <span class="passion-num">02</span>
+                <span class="passion-text">Concevoir des architectures propres</span>
+            </div>
+            <div class="passion-card">
+                <span class="passion-num">03</span>
+                <span class="passion-text">Résoudre des problèmes front-end & back-end</span>
+            </div>
+            <div class="passion-card">
+                <span class="passion-num">04</span>
+                <span class="passion-text">Collaborer avec des profils UX / création</span>
+            </div>
+            <div class="passion-card" style="grid-column: 1 / -1; max-width: 50%;">
+                <span class="passion-num">05</span>
+                <span class="passion-text">Optimiser performance et structure</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════ DIVIDER ═══════ -->
+    <div class="divider">
+        <div class="divider-line divider-line--right"></div>
+        <span class="divider-num">03</span>
+        <div class="divider-line"></div>
+    </div>
+
+    <!-- ═══════ STACK ═══════ -->
+    <section class="section">
+        <div class="section-header">
+            <span class="section-number">03</span>
+            <h2 class="section-title">Stack technique</h2>
+        </div>
+
+        <div class="stack-container">
+            <span class="stack-pill stack-pill--core">JavaScript / Node.js</span>
+            <span class="stack-pill stack-pill--core">Flutter</span>
+            <span class="stack-pill stack-pill--core">MongoDB</span>
+            <span class="stack-pill">Stripe</span>
+            <span class="stack-pill">Docker</span>
+            <span class="stack-pill">Git</span>
+            <span class="stack-pill stack-pill--learning">React</span>
+            <span class="stack-pill stack-pill--learning">Next.js</span>
+        </div>
+    </section>
+
+    <!-- ═══════ DIVIDER ═══════ -->
+    <div class="divider">
+        <div class="divider-line divider-line--right"></div>
+        <span class="divider-num">04</span>
+        <div class="divider-line"></div>
+    </div>
+
+    <!-- ═══════ EXPÉRIENCE ═══════ -->
+    <section class="section">
+        <div class="section-header">
+            <span class="section-number">04</span>
+            <h2 class="section-title">Expérience professionnelle</h2>
+        </div>
+
+        <div class="exp-card">
+            <div class="exp-left">
+                <div class="exp-company">GardaWorld</div>
+                <div class="exp-role">Installation de chantier routier</div>
+            </div>
+            <ul class="exp-list">
+                <li>Travail sous pression dans des environnements structurés</li>
+                <li>Respect strict des procédures et sécurité</li>
+                <li>Coordination et esprit d'équipe</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- ═══════ OBJECTIF ═══════ -->
+    <div class="objective-section">
+        <div class="objective-card">
+            <div class="objective-label">Objectif</div>
+            <h3 class="objective-target-name">Sid Lee</h3>
+            <p class="objective-headline">Créer à l'intersection du code et de l'expérience.</p>
+            <p class="objective-text">
+                Évoluer dans un environnement créatif où la technologie sert l'expérience,
+                collaborer avec UX et direction artistique, et contribuer à des projets
+                numériques ambitieux.
+            </p>
+            <div class="objective-link">
+                <a href="lettre-motivation.html">Lire ma lettre de motivation</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════ FOOTER ═══════ -->
+    <div class="footer">
+        <span class="footer-left">Noel christian Fogang negou &mdash; 2025</span>
+        <div class="footer-right">
+            <div class="footer-bar"></div>
+            <div class="footer-bar"></div>
+            <div class="footer-bar"></div>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>
