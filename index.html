@@ -740,22 +740,14 @@
 
         /* ── PRINT ── */
         @media print {
-            body { background: white; color: #1a1a1a; }
+            body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
             body::before { display: none; }
-            .hero-orb { display: none; }
-            .hero { min-height: auto; padding: 40px 40px; }
-            .section, .objective-section { padding: 32px 40px; }
-            .hero-name, .hero-name span { color: #0a0a0a; -webkit-text-fill-color: #0a0a0a; }
+            .hero { min-height: auto; padding: 48px 48px; }
+            .section, .objective-section { padding: 36px 48px; }
             .scroll-hint { display: none; }
-            .project-card, .exp-card, .passion-card, .stack-pill {
-                border-color: #ddd;
-                background: #fafafa;
-            }
-            .objective-card { background: #f0f0f5; }
-            .section-title, .project-name, .exp-company, .objective-target-name { color: #0a0a0a; }
-            .ps-label, .tech-col-sub, .divider-num, .hero-status, .objective-label { color: #666; }
-            .passion-num { -webkit-text-fill-color: #4f46e5; }
-            .objective-headline { -webkit-text-fill-color: #4f46e5; }
+            .passion-card:hover { transform: none; }
+            .stack-pill:hover { transform: none; }
+            .objective-link a:hover { transform: none; }
         }
     </style>
 </head>
