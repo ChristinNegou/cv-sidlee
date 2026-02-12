@@ -1,0 +1,1048 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Si le code était invisible — Noel Christian Fogang Negou</title>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #060608;
+            --surface: #0e0e13;
+            --border: #1a1a25;
+            --text: #e8e8ed;
+            --text-dim: #8888a0;
+            --text-muted: #44445a;
+            --accent: #6c5ce7;
+            --accent-2: #a29bfe;
+            --hot: #fd79a8;
+            --cyan: #00cec9;
+            --gold: #ffeaa7;
+            --white: #ffffff;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html {
+            scroll-behavior: smooth;
+            scroll-snap-type: y mandatory;
+        }
+
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+        }
+
+        /* ── GLOBAL NOISE ── */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* ── SCROLL PROGRESS ── */
+        .progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent), var(--hot), var(--cyan));
+            width: 0%;
+            z-index: 1000;
+            transition: width 0.1s linear;
+        }
+
+        /* ── NAV DOTS ── */
+        .nav-dots {
+            position: fixed;
+            right: 32px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            z-index: 100;
+        }
+
+        .nav-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            border: 1.5px solid var(--text-muted);
+            background: transparent;
+            cursor: pointer;
+            transition: all 0.4s ease;
+        }
+
+        .nav-dot.active {
+            background: var(--accent);
+            border-color: var(--accent);
+            box-shadow: 0 0 12px rgba(108,92,231,0.4);
+        }
+
+        /* ── SECTIONS ── */
+        .scene {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            scroll-snap-align: start;
+            overflow: hidden;
+        }
+
+        .scene__inner {
+            max-width: 900px;
+            width: 100%;
+            padding: 64px;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* ── FADE IN SYSTEM ── */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+                        transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .reveal-delay-1 { transition-delay: 0.15s; }
+        .reveal-delay-2 { transition-delay: 0.35s; }
+        .reveal-delay-3 { transition-delay: 0.55s; }
+        .reveal-delay-4 { transition-delay: 0.75s; }
+        .reveal-delay-5 { transition-delay: 0.95s; }
+
+        /* ══════════════════════════════════
+           SCENE 0 — INTRO
+           ══════════════════════════════════ */
+        .scene--intro {
+            background: var(--bg);
+        }
+
+        .intro-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 48px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .intro-label::before {
+            content: '';
+            width: 24px;
+            height: 1px;
+            background: var(--text-muted);
+        }
+
+        .intro-title {
+            font-family: 'Syne', sans-serif;
+            font-size: clamp(2.5rem, 7vw, 5rem);
+            font-weight: 800;
+            line-height: 1.05;
+            letter-spacing: -0.04em;
+            color: var(--white);
+            margin-bottom: 24px;
+        }
+
+        .intro-title em {
+            font-style: normal;
+            background: linear-gradient(135deg, var(--accent-2), var(--hot));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .intro-sub {
+            font-size: 1.15rem;
+            color: var(--text-muted);
+            max-width: 500px;
+        }
+
+        .intro-scroll {
+            position: absolute;
+            bottom: 48px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            animation: float 2.5s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(8px); }
+        }
+
+        .intro-scroll-line {
+            width: 1px;
+            height: 40px;
+            background: linear-gradient(180deg, var(--text-muted), transparent);
+        }
+
+        .intro-scroll-text {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        /* ══════════════════════════════════
+           SCENE 1 — LE CONSTAT
+           ══════════════════════════════════ */
+        .scene--constat {
+            background: var(--bg);
+        }
+
+        .constat-text {
+            font-family: 'Syne', sans-serif;
+            text-align: center;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .constat-line {
+            display: block;
+            font-size: clamp(1.5rem, 4vw, 2.8rem);
+            font-weight: 700;
+            line-height: 1.4;
+            letter-spacing: -0.02em;
+        }
+
+        .constat-line--visible {
+            color: var(--white);
+        }
+
+        .constat-line--invisible {
+            color: var(--text-muted);
+            position: relative;
+        }
+
+        .constat-line--invisible .ghost {
+            background: linear-gradient(90deg, var(--accent-2), var(--hot));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            opacity: 0;
+            transition: opacity 1.5s ease 1.2s;
+        }
+
+        .scene--constat.in-view .constat-line--invisible .ghost {
+            opacity: 1;
+        }
+
+        .constat-separator {
+            width: 48px;
+            height: 2px;
+            background: var(--border);
+            margin: 40px auto;
+        }
+
+        .constat-quote {
+            font-size: 1.2rem;
+            color: var(--text-dim);
+            font-style: italic;
+            text-align: center;
+        }
+
+        /* ══════════════════════════════════
+           SCENE 2 — LE SCHÉMA
+           ══════════════════════════════════ */
+        .scene--schema {
+            background: var(--bg);
+        }
+
+        .schema-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0;
+        }
+
+        .schema-flow {
+            display: flex;
+            align-items: center;
+            gap: 0;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .schema-node {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            padding: 28px 20px;
+            min-width: 140px;
+        }
+
+        .schema-node-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            transition: all 0.5s ease;
+        }
+
+        .schema-node--idea .schema-node-icon {
+            border-color: rgba(255,234,167,0.3);
+            color: var(--gold);
+        }
+
+        .schema-node--exp .schema-node-icon {
+            border-color: rgba(253,121,168,0.3);
+            color: var(--hot);
+        }
+
+        .schema-node--tech .schema-node-icon {
+            border-color: rgba(108,92,231,0.3);
+            color: var(--accent-2);
+            position: relative;
+        }
+
+        .schema-node--tech .schema-node-icon::after {
+            content: '';
+            position: absolute;
+            inset: -4px;
+            border-radius: 20px;
+            border: 1px dashed rgba(108,92,231,0.2);
+            animation: dashedSpin 12s linear infinite;
+        }
+
+        @keyframes dashedSpin {
+            to { transform: rotate(360deg); }
+        }
+
+        .schema-node--user .schema-node-icon {
+            border-color: rgba(0,206,201,0.3);
+            color: var(--cyan);
+        }
+
+        .schema-node-label {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: var(--white);
+            text-align: center;
+        }
+
+        .schema-node-sub {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            text-align: center;
+            letter-spacing: 0.04em;
+        }
+
+        .schema-node--tech .schema-node-label {
+            color: var(--accent-2);
+        }
+
+        .schema-arrow {
+            display: flex;
+            align-items: center;
+            padding: 0 4px;
+        }
+
+        .schema-arrow-line {
+            width: 40px;
+            height: 1px;
+            background: linear-gradient(90deg, var(--border), var(--text-muted));
+            position: relative;
+        }
+
+        .schema-arrow-line::after {
+            content: '';
+            position: absolute;
+            right: -1px;
+            top: -3px;
+            width: 0;
+            height: 0;
+            border-left: 6px solid var(--text-muted);
+            border-top: 3.5px solid transparent;
+            border-bottom: 3.5px solid transparent;
+        }
+
+        .schema-insight {
+            margin-top: 56px;
+            text-align: center;
+            max-width: 520px;
+        }
+
+        .schema-insight p {
+            font-size: 1.2rem;
+            color: var(--text-dim);
+            line-height: 1.8;
+        }
+
+        .schema-insight strong {
+            color: var(--accent-2);
+            font-weight: 600;
+        }
+
+        /* ══════════════════════════════════
+           SCENE 3 — LE MANIFESTE
+           ══════════════════════════════════ */
+        .scene--manifeste {
+            background: var(--bg);
+        }
+
+        .manifeste-content {
+            max-width: 680px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .manifeste-line {
+            font-family: 'Syne', sans-serif;
+            font-size: clamp(1.3rem, 3.5vw, 2rem);
+            font-weight: 600;
+            line-height: 1.6;
+            color: var(--text-dim);
+        }
+
+        .manifeste-line--strong {
+            font-size: clamp(1.5rem, 4vw, 2.4rem);
+            font-weight: 800;
+            color: var(--white);
+            margin-top: 16px;
+        }
+
+        .manifeste-line--strong em {
+            font-style: normal;
+            background: linear-gradient(135deg, var(--accent-2) 0%, var(--hot) 50%, var(--gold) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .manifeste-separator {
+            width: 48px;
+            height: 2px;
+            background: var(--accent);
+            margin: 40px auto;
+        }
+
+        .manifeste-signature {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            letter-spacing: 0.06em;
+        }
+
+        /* ══════════════════════════════════
+           SCENE 4 — LA PREUVE
+           ══════════════════════════════════ */
+        .scene--preuve {
+            background: var(--bg);
+        }
+
+        .preuve-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            text-align: center;
+            margin-bottom: 16px;
+        }
+
+        .preuve-title {
+            font-family: 'Syne', sans-serif;
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 800;
+            text-align: center;
+            color: var(--white);
+            letter-spacing: -0.03em;
+            margin-bottom: 12px;
+        }
+
+        .preuve-sub {
+            text-align: center;
+            font-size: 1.15rem;
+            color: var(--text-dim);
+            margin-bottom: 48px;
+        }
+
+        .preuve-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 48px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .preuve-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--accent), var(--hot), transparent);
+        }
+
+        .preuve-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 32px;
+        }
+
+        .preuve-col-title {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--white);
+            margin-bottom: 6px;
+        }
+
+        .preuve-col-sub {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 16px;
+            letter-spacing: 0.04em;
+        }
+
+        .preuve-visible {
+            border-right: 1px solid var(--border);
+            padding-right: 32px;
+        }
+
+        .preuve-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .preuve-list li {
+            font-size: 1.05rem;
+            color: var(--text-dim);
+            padding-left: 20px;
+            position: relative;
+            line-height: 1.6;
+            font-weight: 300;
+        }
+
+        .preuve-visible .preuve-list li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 9px;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--hot);
+            opacity: 0.6;
+        }
+
+        .preuve-invisible .preuve-list li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 9px;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            border: 1.5px solid var(--accent);
+            background: transparent;
+        }
+
+        .preuve-bottom {
+            margin-top: 36px;
+            padding-top: 28px;
+            border-top: 1px solid var(--border);
+            text-align: center;
+        }
+
+        .preuve-bottom p {
+            font-size: 1.1rem;
+            color: var(--text-dim);
+            line-height: 1.7;
+        }
+
+        .preuve-bottom strong {
+            color: var(--white);
+            font-weight: 600;
+        }
+
+        /* ── CTA ── */
+        .preuve-cta {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin-top: 36px;
+        }
+
+        .cta-btn {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.95rem;
+            letter-spacing: 0.04em;
+            padding: 14px 28px;
+            border-radius: 100px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+        }
+
+        .cta-btn--primary {
+            background: var(--accent);
+            color: var(--white);
+            border: 1px solid var(--accent);
+        }
+
+        .cta-btn--primary:hover {
+            background: #5b4bd4;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(108,92,231,0.3);
+        }
+
+        .cta-btn--ghost {
+            background: transparent;
+            color: var(--text-dim);
+            border: 1px solid var(--border);
+        }
+
+        .cta-btn--ghost:hover {
+            border-color: var(--accent);
+            color: var(--accent-2);
+            transform: translateY(-2px);
+        }
+
+        /* ── FOOTER ── */
+        .footer-bar {
+            padding: 32px 64px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .footer-name {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .footer-bars {
+            display: flex;
+            gap: 4px;
+        }
+
+        .footer-b {
+            height: 3px;
+            border-radius: 2px;
+        }
+
+        .footer-b:nth-child(1) { width: 32px; background: var(--accent); }
+        .footer-b:nth-child(2) { width: 20px; background: var(--hot); }
+        .footer-b:nth-child(3) { width: 12px; background: var(--cyan); }
+
+        /* ── AUDIO BUTTON ── */
+        .audio-btn {
+            position: fixed;
+            bottom: 32px;
+            right: 32px;
+            z-index: 200;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 3px;
+            transition: all 0.3s ease;
+        }
+
+        .audio-btn:hover {
+            border-color: var(--accent);
+            background: rgba(108,92,231,0.08);
+        }
+
+        .audio-btn .bar {
+            width: 3px;
+            border-radius: 2px;
+            background: var(--text-muted);
+            transition: height 0.3s ease, background 0.3s ease;
+        }
+
+        .audio-btn.playing .bar {
+            background: var(--accent-2);
+            animation: eqBar 0.8s ease-in-out infinite alternate;
+        }
+
+        .audio-btn .bar:nth-child(1) { height: 8px; }
+        .audio-btn .bar:nth-child(2) { height: 16px; }
+        .audio-btn .bar:nth-child(3) { height: 10px; }
+        .audio-btn .bar:nth-child(4) { height: 14px; }
+
+        .audio-btn.playing .bar:nth-child(1) { animation-delay: 0s; }
+        .audio-btn.playing .bar:nth-child(2) { animation-delay: 0.15s; }
+        .audio-btn.playing .bar:nth-child(3) { animation-delay: 0.3s; }
+        .audio-btn.playing .bar:nth-child(4) { animation-delay: 0.45s; }
+
+        @keyframes eqBar {
+            0% { height: 6px; }
+            100% { height: 20px; }
+        }
+
+        .audio-btn.paused .bar {
+            background: var(--text-muted);
+            animation: none;
+        }
+
+        .audio-btn.paused .bar:nth-child(1) { height: 12px; }
+        .audio-btn.paused .bar:nth-child(2) { height: 12px; }
+        .audio-btn.paused .bar:nth-child(3) { height: 12px; }
+        .audio-btn.paused .bar:nth-child(4) { height: 12px; }
+
+        .audio-label {
+            position: fixed;
+            bottom: 40px;
+            right: 90px;
+            z-index: 200;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.6rem;
+            color: var(--text-muted);
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            opacity: 1;
+            transition: opacity 0.5s ease 3s;
+            pointer-events: none;
+        }
+
+        .audio-label.hidden {
+            opacity: 0;
+        }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 768px) {
+            .scene__inner { padding: 48px 24px; }
+            .nav-dots { right: 16px; }
+            .schema-flow { flex-direction: column; }
+            .schema-arrow { transform: rotate(90deg); padding: 8px 0; }
+            .preuve-grid { grid-template-columns: 1fr; }
+            .preuve-visible { border-right: none; padding-right: 0; border-bottom: 1px solid var(--border); padding-bottom: 32px; }
+            .preuve-cta { flex-direction: column; align-items: center; }
+            .footer-bar { padding: 24px; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Audio -->
+<audio id="bgMusic" loop preload="auto">
+    <source src="audio_ambient.mp3" type="audio/mpeg">
+</audio>
+
+<button class="audio-btn paused" id="audioBtn" aria-label="Play/Pause musique">
+    <span class="bar"></span>
+    <span class="bar"></span>
+    <span class="bar"></span>
+    <span class="bar"></span>
+</button>
+<span class="audio-label" id="audioLabel">son</span>
+
+<!-- Progress bar -->
+<div class="progress" id="progress"></div>
+
+<!-- Nav dots -->
+<nav class="nav-dots" id="navDots">
+    <div class="nav-dot active" data-target="0"></div>
+    <div class="nav-dot" data-target="1"></div>
+    <div class="nav-dot" data-target="2"></div>
+    <div class="nav-dot" data-target="3"></div>
+    <div class="nav-dot" data-target="4"></div>
+</nav>
+
+<!-- ════════════════════════════
+     SCENE 0 — INTRO
+     ════════════════════════════ -->
+<section class="scene scene--intro" id="scene0">
+    <div class="scene__inner">
+        <div class="intro-label reveal">Idée créative — Candidature Sid Lee</div>
+        <h1 class="intro-title reveal reveal-delay-1">
+            Si le code<br>était <em>invisible</em>
+        </h1>
+        <p class="intro-sub reveal reveal-delay-2">Une réflexion sur ce que personne ne voit — et qui fait tout fonctionner.</p>
+    </div>
+    <div class="intro-scroll">
+        <div class="intro-scroll-line"></div>
+        <span class="intro-scroll-text">scroll</span>
+    </div>
+</section>
+
+<!-- ════════════════════════════
+     SCENE 1 — LE CONSTAT
+     ════════════════════════════ -->
+<section class="scene scene--constat" id="scene1">
+    <div class="scene__inner">
+        <div class="constat-text">
+            <span class="constat-line constat-line--visible reveal">
+                Tout le monde voit le design.
+            </span>
+            <span class="constat-line constat-line--invisible reveal reveal-delay-2">
+                Personne ne voit <span class="ghost">l'architecture.</span>
+            </span>
+        </div>
+        <div class="constat-separator reveal reveal-delay-3"></div>
+        <p class="constat-quote reveal reveal-delay-4">
+            Le meilleur code est celui qui disparaît<br>au profit de l'expérience.
+        </p>
+    </div>
+</section>
+
+<!-- ════════════════════════════
+     SCENE 2 — LE SCHÉMA
+     ════════════════════════════ -->
+<section class="scene scene--schema" id="scene2">
+    <div class="scene__inner">
+        <div class="schema-container">
+            <div class="schema-flow">
+                <div class="schema-node schema-node--idea reveal">
+                    <div class="schema-node-icon">&#x2728;</div>
+                    <span class="schema-node-label">Idée</span>
+                    <span class="schema-node-sub">Le point de départ</span>
+                </div>
+
+                <div class="schema-arrow reveal reveal-delay-1">
+                    <div class="schema-arrow-line"></div>
+                </div>
+
+                <div class="schema-node schema-node--exp reveal reveal-delay-1">
+                    <div class="schema-node-icon">&#x25CE;</div>
+                    <span class="schema-node-label">Expérience</span>
+                    <span class="schema-node-sub">Ce que l'on ressent</span>
+                </div>
+
+                <div class="schema-arrow reveal reveal-delay-2">
+                    <div class="schema-arrow-line"></div>
+                </div>
+
+                <div class="schema-node schema-node--tech reveal reveal-delay-2">
+                    <div class="schema-node-icon">&lt;/&gt;</div>
+                    <span class="schema-node-label">Technologie invisible</span>
+                    <span class="schema-node-sub">Ce qui rend tout possible</span>
+                </div>
+
+                <div class="schema-arrow reveal reveal-delay-3">
+                    <div class="schema-arrow-line"></div>
+                </div>
+
+                <div class="schema-node schema-node--user reveal reveal-delay-3">
+                    <div class="schema-node-icon">&#x2615;</div>
+                    <span class="schema-node-label">Utilisateur</span>
+                    <span class="schema-node-sub">Ce qui compte vraiment</span>
+                </div>
+            </div>
+
+            <div class="schema-insight reveal reveal-delay-4">
+                <p>La technologie la plus réussie est celle que <strong>l'on ne remarque pas</strong>. Elle est partout — dans chaque interaction fluide, chaque chargement instantané, chaque moment sans friction.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ════════════════════════════
+     SCENE 3 — LE MANIFESTE
+     ════════════════════════════ -->
+<section class="scene scene--manifeste" id="scene3">
+    <div class="scene__inner">
+        <div class="manifeste-content">
+            <p class="manifeste-line reveal">
+                Je ne veux pas seulement<br>développer des interfaces.
+            </p>
+            <p class="manifeste-line manifeste-line--strong reveal reveal-delay-2">
+                Je veux construire les<br><em>fondations invisibles</em><br>qui rendent les idées possibles.
+            </p>
+            <div class="manifeste-separator reveal reveal-delay-3"></div>
+            <p class="manifeste-signature reveal reveal-delay-4">Noel Christian Fogang Negou</p>
+        </div>
+    </div>
+</section>
+
+<!-- ════════════════════════════
+     SCENE 4 — LA PREUVE
+     ════════════════════════════ -->
+<section class="scene scene--preuve" id="scene4">
+    <div class="scene__inner">
+        <div class="preuve-label reveal">La preuve</div>
+        <h2 class="preuve-title reveal reveal-delay-1">Deneige Auto</h2>
+        <p class="preuve-sub reveal reveal-delay-1">Ce que les utilisateurs voient vs. ce que j'ai construit.</p>
+
+        <div class="preuve-card reveal reveal-delay-2">
+            <div class="preuve-grid">
+                <div class="preuve-visible">
+                    <div class="preuve-col-title">Ce qu'on voit</div>
+                    <div class="preuve-col-sub">L'expérience utilisateur</div>
+                    <ul class="preuve-list">
+                        <li>Un bouton « Commander un déneigeur »</li>
+                        <li>Une carte avec position en temps réel</li>
+                        <li>Un paiement en un tap</li>
+                        <li>Une notification « En route »</li>
+                        <li>Un historique clair et simple</li>
+                    </ul>
+                </div>
+                <div class="preuve-invisible">
+                    <div class="preuve-col-title">Ce qu'on ne voit pas</div>
+                    <div class="preuve-col-sub">L'architecture invisible</div>
+                    <ul class="preuve-list">
+                        <li>API REST sécurisée + JWT + bcrypt</li>
+                        <li>WebSockets temps réel (Socket.IO)</li>
+                        <li>Intégration Stripe sécurisée</li>
+                        <li>Firebase push + gestion des tokens</li>
+                        <li>Clean Architecture + Bloc + Docker</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="preuve-bottom reveal reveal-delay-3">
+                <p><strong>5 gestes simples côté utilisateur. Des milliers de lignes invisibles côté développeur.</strong><br>C'est exactement ce que je veux faire chez Sid Lee.</p>
+            </div>
+        </div>
+
+        <div class="preuve-cta reveal reveal-delay-4">
+            <a href="index.html" class="cta-btn cta-btn--primary">Voir mon CV complet</a>
+            <a href="lettre-motivation.html" class="cta-btn cta-btn--ghost">Lire ma lettre</a>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<div class="footer-bar">
+    <span class="footer-name">Noel Christian Fogang Negou — Sid Lee 2025</span>
+    <div class="footer-bars">
+        <div class="footer-b"></div>
+        <div class="footer-b"></div>
+        <div class="footer-b"></div>
+    </div>
+</div>
+
+<script>
+    // ── Intersection Observer for reveal animations ──
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+
+                // Add in-view class to parent scene for scene-level animations
+                const scene = entry.target.closest('.scene');
+                if (scene) scene.classList.add('in-view');
+            }
+        });
+    }, { threshold: 0.15 });
+
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    // ── Scroll progress bar ──
+    const progressBar = document.getElementById('progress');
+    window.addEventListener('scroll', () => {
+        const scrollTop = window.scrollY;
+        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+        const scrollPercent = (scrollTop / docHeight) * 100;
+        progressBar.style.width = scrollPercent + '%';
+    });
+
+    // ── Nav dots ──
+    const scenes = document.querySelectorAll('.scene');
+    const dots = document.querySelectorAll('.nav-dot');
+
+    const sceneObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const index = Array.from(scenes).indexOf(entry.target);
+                dots.forEach((d, i) => d.classList.toggle('active', i === index));
+            }
+        });
+    }, { threshold: 0.5 });
+
+    scenes.forEach(scene => sceneObserver.observe(scene));
+
+    dots.forEach(dot => {
+        dot.addEventListener('click', () => {
+            const target = scenes[dot.dataset.target];
+            target.scrollIntoView({ behavior: 'smooth' });
+        });
+    });
+
+    // ── Audio control ──
+    const music = document.getElementById('bgMusic');
+    const audioBtn = document.getElementById('audioBtn');
+    const audioLabel = document.getElementById('audioLabel');
+    let isPlaying = false;
+
+    function fadeIn(audio, duration = 2000) {
+        audio.volume = 0;
+        audio.play();
+        const step = 0.4 / (duration / 50);
+        const fade = setInterval(() => {
+            if (audio.volume + step >= 0.4) {
+                audio.volume = 0.4;
+                clearInterval(fade);
+            } else {
+                audio.volume += step;
+            }
+        }, 50);
+    }
+
+    function fadeOut(audio, duration = 800) {
+        const step = audio.volume / (duration / 50);
+        const fade = setInterval(() => {
+            if (audio.volume - step <= 0) {
+                audio.volume = 0;
+                audio.pause();
+                clearInterval(fade);
+            } else {
+                audio.volume -= step;
+            }
+        }, 50);
+    }
+
+    audioBtn.addEventListener('click', () => {
+        if (isPlaying) {
+            fadeOut(music);
+            audioBtn.classList.remove('playing');
+            audioBtn.classList.add('paused');
+        } else {
+            fadeIn(music);
+            audioBtn.classList.remove('paused');
+            audioBtn.classList.add('playing');
+        }
+        isPlaying = !isPlaying;
+        audioLabel.classList.add('hidden');
+    });
+</script>
+
+</body>
+</html>
