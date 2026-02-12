@@ -1042,6 +1042,24 @@
         isPlaying = !isPlaying;
         audioLabel.classList.add('hidden');
     });
+
+    // ── Autoplay on first interaction ──
+    function autoStart() {
+        if (!isPlaying) {
+            fadeIn(music);
+            audioBtn.classList.remove('paused');
+            audioBtn.classList.add('playing');
+            isPlaying = true;
+            audioLabel.classList.add('hidden');
+        }
+        window.removeEventListener('scroll', autoStart);
+        window.removeEventListener('click', autoStart);
+        window.removeEventListener('touchstart', autoStart);
+    }
+
+    window.addEventListener('scroll', autoStart, { once: true });
+    window.addEventListener('click', autoStart, { once: true });
+    window.addEventListener('touchstart', autoStart, { once: true });
 </script>
 
 </body>
