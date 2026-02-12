@@ -1043,23 +1043,44 @@
         audioLabel.classList.add('hidden');
     });
 
-    // ── Autoplay on first interaction ──
-    function autoStart() {
-        if (!isPlaying) {
-            fadeIn(music);
-            audioBtn.classList.remove('paused');
-            audioBtn.classList.add('playing');
-            isPlaying = true;
-            audioLabel.classList.add('hidden');
-        }
-        window.removeEventListener('scroll', autoStart);
-        window.removeEventListener('click', autoStart);
-        window.removeEventListener('touchstart', autoStart);
+    // ── Autoplay: try immediate, fallback to first scroll ──
+    let autoStarted = false;
+
+    function startMusic() {
+        if (autoStarted || isPlaying) return;
+        autoStarted = true;
+        fadeIn(music);
+        audioBtn.classList.remove('paused');
+        audioBtn.classList.add('playing');
+        isPlaying = true;
+        audioLabel.classList.add('hidden');
     }
 
-    window.addEventListener('scroll', autoStart, { once: true });
-    window.addEventListener('click', autoStart, { once: true });
-    window.addEventListener('touchstart', autoStart, { once: true });
+    // Try autoplay immediately
+    music.volume = 0;
+    music.play().then(() => {
+        // Autoplay allowed — fade in
+        autoStarted = true;
+        isPlaying = true;
+        audioBtn.classList.remove('paused');
+        audioBtn.classList.add('playing');
+        audioLabel.classList.add('hidden');
+        const step = 0.4 / (2000 / 50);
+        const fade = setInterval(() => {
+            if (music.volume + step >= 0.4) {
+                music.volume = 0.4;
+                clearInterval(fade);
+            } else {
+                music.volume += step;
+            }
+        }, 50);
+    }).catch(() => {
+        // Autoplay blocked — start on first scroll/touch
+        document.addEventListener('scroll', startMusic, { once: true });
+        document.addEventListener('touchstart', startMusic, { once: true });
+        document.addEventListener('keydown', startMusic, { once: true });
+        document.addEventListener('mousemove', startMusic, { once: true });
+    });
 </script>
 
 </body>
